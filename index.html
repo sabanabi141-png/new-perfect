@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tenant System</title>
+  <style>
+    body { font-family: Arial; text-align: center; margin-top: 40px; }
+    .page { display: none; }
+    .active { display: block; }
+    input { margin: 8px; padding: 8px; }
+
+    table {
+      margin: 20px auto;
+      border-collapse: collapse;
+      width: 60%;
+    }
+
+    th, td {
+      border: 1px solid #333;
+      padding: 10px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    button {
+      padding: 10px 15px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- PAGE 1 -->
+<div id="page1" class="page active">
+  <h2>Welcome</h2>
+  <button onclick="goToPage(2)">Login</button>
+</div>
+
+<!-- PAGE 2 -->
+<div id="page2" class="page">
+  <h2>Login</h2>
+  <input type="text" id="username" placeholder="Username"><br>
+  <input type="password" id="password" placeholder="Password"><br>
+  <button onclick="login()">Submit</button>
+</div>
+
+<!-- PAGE 3 -->
+<div id="page3" class="page">
+  <h2>Tenant Search</h2>
+  <input type="text" id="tenantId" placeholder="Enter Tenant ID">
+  <button onclick="searchTenant()">Search</button>
+
+  <p id="message"></p>
+
+  <div id="tableContainer"></div>
+</div>
+
+<script>
+  function goToPage(page) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page' + page).classList.add('active');
+  }
+
+  function login() {
+    let user = document.getElementById("username").value;
+    let pass = document.getElementById("password").value;
+
+    if (user === "admin" && pass === "1234") {
+      goToPage(3);
+    } else {
+      alert("Invalid login");
+    }
+  }
+
+  // Fake "tenant.xlsx" data with utilities
+  const tenants = {
+    "T001": { gas: 120, electricity: 80, water: 30 },
+    "T002": { gas: 200, electricity: 150, water: 60 },
+    "T003": { gas: 90, electricity: 70, water: 25 }
+  };
+
+  function searchTenant() {
+    let id = document.getElementById("tenantId").value;
+    let msg = document.getElementById("message");
+    let container = document.getElementById("tableContainer");
+
+    container.innerHTML = "";
+
+    if (tenants[id]) {
+      msg.innerText = "Tenant Found";
+
+      let data = tenants[id];
+
+      container.innerHTML = `
+        <table>
+          <tr>
+            <th>Gas</th>
+            <th>Electricity</th>
+            <th>Water</th>
+          </tr>
+          <tr>
+            <td>${data.gas}</td>
+            <td>${data.electricity}</td>
+            <td>${data.water}</td>
+          </tr>
+        </table>
+      `;
+    } else {
+      msg.innerText = "No tenant found";
+    }
+  }
+</script>
+
+</body>
+</html>
